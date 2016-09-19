@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
 	public String getLockFromApp(String appName)
 	{
+        Log.d("WakeLockDetector", "Apmnknknknp: " + appName);
+
 		return (appName.contains(app))?lock:null;
 	}
 
@@ -50,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
 		PackageManager pm = getPackageManager();
 		List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
-		for (ApplicationInfo applicationInfo : packages) {
-			Log.d("WakeLockDetector", "App: " + applicationInfo.name + " Package: " + applicationInfo.packageName);
+        for (ApplicationInfo applicationInfo : packages) {
+//			Log.d("WakeLockDetector", "App: " + applicationInfo + " Package: " + applicationInfo.packageName);
 
 			try {
 				PackageInfo packageInfo = pm.getPackageInfo(applicationInfo.packageName, PackageManager.GET_PERMISSIONS);
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
 				if(requestedPermissions != null) {
 					for (int i = 0; i < requestedPermissions.length; i++) {
-						//Log.d("WakeLockDetector", requestedPermissions[i]);
+						Log.d("WakeLockDetector", requestedPermissions[i]);
 						if(requestedPermissions[i].equals("android.permission.WAKE_LOCK")) {
 							appsList.append(applicationInfo.packageName + "\n");
 						}
@@ -81,12 +83,16 @@ public class MainActivity extends AppCompatActivity {
 		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
 
-		for (int i = 0; i < recentTasks.size(); i++)
+
+        for (int i = 0; i < recentTasks.size(); i++)
 		{
-			String appShortName = recentTasks.get(i).baseActivity.toShortString();
-			String lockAppName = getLockFromApp(appShortName);
+
+            String appShortName = recentTasks.get(i).baseActivity.toShortString();
+            Log.d("Executed app", "Application executed : " + "\t\t ID: "+ appShortName );
+            String lockAppName = getLockfromApps(appShortName);
 			currentList.append((lockAppName!=null)?lockAppName:"");
-			Log.d("Executed app", "Application executed : " + "\t\t ID: "+recentTasks.get(i).id+"");
+
+            Log.d("Executed app", "Application executed : " + "\t\t ID: "+recentTasks.get(i).id+"");
 		}
 	}
 
@@ -121,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             };
+
             XposedHelpers.findAndHookMethod(class1, "acquire", aobj);
             Object aobj1[] = new Object[1];
             aobj1[0] = new XC_MethodHook() {

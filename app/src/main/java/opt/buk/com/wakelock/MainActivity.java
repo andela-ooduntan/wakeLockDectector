@@ -34,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         appsList = (TextView) findViewById(R.id.appsList);
 		currentList = (TextView) findViewById(R.id.currentList);
-		getInstalledAppPermissions();
+//		getInstalledAppPermissions();
 		getCurrentWakeLocks();
+//        getLockfromApps();
         prefs = new XSharedPreferences("PackageName", "WLTSettings");
     }
 
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 	{
         Log.d("WakeLockDetector", "Apmnknknknp: " + appName);
 
-		return (appName.contains(app))?lock:null;
+		return (appName.contains(app)) ? lock : null;
 	}
 
 
@@ -77,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
-	public void getCurrentWakeLocks()
-	{
+	public void getCurrentWakeLocks() {
 
 		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
@@ -86,76 +86,78 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < recentTasks.size(); i++)
 		{
-
+//
             String appShortName = recentTasks.get(i).baseActivity.toShortString();
             Log.d("Executed app", "Application executed : " + "\t\t ID: "+ appShortName );
             String lockAppName = getLockfromApps(appShortName);
-			currentList.append((lockAppName!=null)?lockAppName:"");
+//			currentList.append((lockAppName!=null)?lockAppName:"");
 
-            Log.d("Executed app", "Application executed : " + "\t\t ID: "+recentTasks.get(i).id+"");
+//            Log.d("Executed app", "Application executed : " + "\t\t ID: "+recentTasks.get(i).baseActivity.toShortString()+"");
 		}
 	}
 
 	public String getLockfromApps(final String appName)
 	{
-		if (prefs.getBoolean((new StringBuilder(String.valueOf(appName))).append("/preventWakeLock").toString(), false))
-        {
-            Class class1 = XposedHelpers.findClass("android.os.PowerManager.WakeLock", this.getClassLoader());
-            Object aobj[] = new Object[1];
-            aobj[0] = new XC_MethodHook() {
 
-                //final MainXposedHook this$0;
-                private final de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam val$lpparam = null;
-
-                protected void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook.MethodHookParam methodhookparam)
-                    throws Throwable
-                {
-                    if (prefs.getBoolean((new StringBuilder(String.valueOf(appName))).append("/preventWakeLock").toString(), false))
-                    {
-                        String s = (String)XposedHelpers.getObjectField((android.os.PowerManager.WakeLock)methodhookparam.thisObject, "mTag");
-                        String s1 = prefs.getString((new StringBuilder(String.valueOf(appName))).append("/filterWakeLockTags").toString(), "");
-                        if (s1.equals(""))
-                        {
-                            s1 = "-1";
-                        }
-                        if (s1.equals("-1") || s1.contains(s))
-                        {
-                            methodhookparam.setResult(null);
-                        }
-                    }
-                }
-
-
-            };
-
-            XposedHelpers.findAndHookMethod(class1, "acquire", aobj);
-            Object aobj1[] = new Object[1];
-            aobj1[0] = new XC_MethodHook() {
-
-                //final MainXposedHook this$0;
-                private final de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam val$lpparam = null;
-
-                protected void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook.MethodHookParam methodhookparam)
-                    throws Throwable
-                {
-                    if (prefs.getBoolean((new StringBuilder(String.valueOf(appName))).append("/preventWakeLock").toString(), false))
-                    {
-                        String s = (String)XposedHelpers.getObjectField((android.os.PowerManager.WakeLock)methodhookparam.thisObject, "mTag");
-                        String s1 = prefs.getString((new StringBuilder(String.valueOf(appName))).append("/filterWakeLockTags").toString(), "-1");
-                        if (s1.equals(""))
-                        {
-                            s1 = "-1";
-                        }
-                        if (s1.equals("-1") || s1.contains(s))
-                        {
-                            methodhookparam.setResult(null);
-                        }
-                    }
-                }
-
-            };
-            XposedHelpers.findAndHookMethod(class1, "release", aobj1);
-        }
+        Log.d("The real test", "Application executed : " + appName); //.append("/preventWakeLock").toString());
+//		if (prefs.getBoolean((new StringBuilder(String.valueOf(appName))).append("/preventWakeLock").toString(), false))
+//        {
+//            Class class1 = XposedHelpers.findClass("android.os.PowerManager.WakeLock", this.getClassLoader());
+//            Object aobj[] = new Object[1];
+//            aobj[0] = new XC_MethodHook() {
+//
+//                //final MainXposedHook this$0;
+//                private final de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam val$lpparam = null;
+//
+////                protected void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook.MethodHookParam methodhookparam)
+////                    throws Throwable
+////                {
+////                    if (prefs.getBoolean((new StringBuilder(String.valueOf(appName))).append("/preventWakeLock").toString(), false))
+////                    {
+////                        String s = (String)XposedHelpers.getObjectField((android.os.PowerManager.WakeLock)methodhookparam.thisObject, "mTag");
+////                        String s1 = prefs.getString((new StringBuilder(String.valueOf(appName))).append("/filterWakeLockTags").toString(), "");
+////                        if (s1.equals(""))
+////                        {
+////                            s1 = "-1";
+////                        }
+////                        if (s1.equals("-1") || s1.contains(s))
+////                        {
+////                            methodhookparam.setResult(null);
+////                        }
+////                    }
+////                }
+//
+//
+//            };
+//
+//            XposedHelpers.findAndHookMethod(class1, "acquire", aobj);
+//            Object aobj1[] = new Object[1];
+//            aobj1[0] = new XC_MethodHook() {
+//
+//                //final MainXposedHook this$0;
+//                private final de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam val$lpparam = null;
+//
+//                protected void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook.MethodHookParam methodhookparam)
+//                    throws Throwable
+//                {
+//                    if (prefs.getBoolean((new StringBuilder(String.valueOf(appName))).append("/preventWakeLock").toString(), false))
+//                    {
+//                        String s = (String)XposedHelpers.getObjectField((android.os.PowerManager.WakeLock)methodhookparam.thisObject, "mTag");
+//                        String s1 = prefs.getString((new StringBuilder(String.valueOf(appName))).append("/filterWakeLockTags").toString(), "-1");
+//                        if (s1.equals(""))
+//                        {
+//                            s1 = "-1";
+//                        }
+//                        if (s1.equals("-1") || s1.contains(s))
+//                        {
+//                            methodhookparam.setResult(null);
+//                        }
+//                    }
+//                }
+//
+//            };
+//            XposedHelpers.findAndHookMethod(class1, "release", aobj1);
+//        }
 		return lock;
 	}
 }
